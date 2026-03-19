@@ -1,4 +1,3 @@
-# LinkBridge-WTSA
 # LinkBridge
 
 LinkBridge is a Flutter accessibility app focused on real-time communication support.
