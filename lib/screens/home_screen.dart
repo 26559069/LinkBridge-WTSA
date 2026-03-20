@@ -20,14 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _index = 0;
 
-  // Keep tab labels in one place so the app bar title and bottom nav never drift.
-  static const List<String> _tabTitles = [
-    "Audio",
-    "Reader",
-    "Learn",
-    "Account",
-  ];
-
   late AnimationController _navController;
   late List<Animation<double>> _navAnimations;
 
@@ -81,26 +73,49 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFDAB9),
+      backgroundColor: const Color(0xFFD7BE82),  // Warm gold background
+
+      // One scaffold for the whole app shell
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF7EFDD),
-        elevation: 1,
-        centerTitle: true,
-        title: Text(
-          _tabTitles[_index],
-          style: const TextStyle(
-            color: Color(0xFF3C3C3C),
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        actions: [
-          if (_index == 3)
-            IconButton(
-              icon: const Icon(Icons.logout, color: Color(0xFF3C3C3C)),
-              onPressed: _signOut,
-            ),
-        ],
+  backgroundColor: const Color(0xFF515A47),  // Sage green for header
+  elevation: 2,
+  centerTitle: true,
+  title: Text(
+    _index == 0
+        ? "Live Captions"
+        : _index == 1
+            ? "Reader"
+            : _index == 2
+                ? "Learn"
+                : "Account",
+    style: const TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w700,
+    ),
+  ),
+  actions: [
+    if (_index == 0)
+      IconButton(
+        icon: const Icon(Icons.help_outline, color: Colors.white),
+        tooltip: 'How this screen works',
+        onPressed: () {},
       ),
+    if (_index == 1)
+      IconButton(
+        icon: const Icon(Icons.help_outline, color: Colors.white),
+        tooltip: 'How this screen works',
+        onPressed: () {},
+      ),
+    if (_index == 3)
+      IconButton(
+        icon: const Icon(
+          Icons.logout,
+          color: Colors.white,
+        ),
+        onPressed: _signOut,
+      ),
+  ],
+),
 
       body: SafeArea(
         child: IndexedStack(
@@ -121,9 +136,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             currentIndex: _index,
             onTap: _onNavTap,
             type: BottomNavigationBarType.fixed,
-            selectedItemColor: const Color(0xFF3C3C3C),
+            selectedItemColor: const Color(0xFF755C1B),
             unselectedItemColor: Colors.black54,
-            backgroundColor: const Color(0xFFF7EFDD),
+            backgroundColor: const Color(0xFFD7BE82),
             elevation: 8,
             // Technical debt: this screen relies on the same tab order in
             // _tabTitles, IndexedStack.children, and nav items below.
@@ -134,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   scale: _navAnimations[0],
                   child: const Icon(Icons.mic_none_outlined),
                 ),
-                label: "Audio",
+                label: "Live Captions",
               ),
               BottomNavigationBarItem(
                 icon: ScaleTransition(
@@ -186,7 +201,7 @@ class _AccountPage extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: const Color(0xFF3C3C3C),
+              color: const Color(0xFF515A47),
               borderRadius: BorderRadius.circular(18),
               boxShadow: const [
                 BoxShadow(
@@ -236,8 +251,8 @@ class _AccountPage extends StatelessWidget {
             icon: const Icon(Icons.logout),
             style: ElevatedButton.styleFrom(
               minimumSize: const Size(double.infinity, 50),
-              backgroundColor: const Color(0xFFF7EFDD),
-              foregroundColor: const Color(0xFF3C3C3C),
+              backgroundColor: const Color(0xFF7A4419),
+              foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
