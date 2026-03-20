@@ -4,21 +4,23 @@ LinkBridge is a Flutter accessibility app focused on real-time communication sup
 
 ## Vision and Motivation
 
-LinkBridge is designed to support people who experience hearing or vision-related communication barriers in everyday life. The core goal is simple: help users stay independent, informed, and included in conversations and environments that often assume everyone can hear and see clearly.
+LinkBridge was created to provide individuals experiencing hearing or vision-related barriers to communication with accessible, easy-to-use methods of navigating everyday life. The main objective is to help users maintain their independence, receive needed information, and participate in all conversations and environments based upon the assumption that everyone can hear and see clearly.
 
-The app combines multiple accessibility workflows in one place so users do not have to switch tools during daily tasks:
-1. Camera-based text recognition with spoken playback for reading signs, menus, and printed information.
-2. Live multi-speaker captioning for group conversations.
-3. Conversation history for reviewing previously captured speech captions.
+LinkBridge has been developed to combine several accessibility workflows in one location, thus eliminating the need for users to switch between applications during typical daily activities. Specifically, the application will include:
 
-The group captioning experience was shaped by a real-world need: tracking who is speaking in fast family or social conversations can be difficult even with hearing support devices. LinkBridge addresses that by labeling speakers and presenting readable, timestamped captions in real time.
+1. A camera-based text recognition feature which includes a speech output option for viewing and listening to signs, menus, and other printed materials. 
+2. Live multi-speaker captioning for use in group conversations. 
+3. A conversation history for users to review previously captured speech captions.
 
-For users with visual impairments, the Reader mode converts visible text into speech on demand. This supports day-to-day independence in environments where Braille or accessible signage may not be available.
+Group captioning was specifically designed to meet a very common problem experienced by many individuals using hearing aid or cochlear implant technology. That problem is identifying who is talking in the midst of a fast-paced conversation in a family or social setting. LinkBridge solves this issue by allowing users to identify and label each speaker, and then present readable, timestamped captions in real-time.
 
-In short, LinkBridge is built to reduce communication friction, preserve important information, and make it easier for people to remain active participants in school, work, and family life.
+For users experiencing visual impairments, the Reader mode provides an on-demand capability to convert visible text into speech. This will allow users to achieve greater independence during their daily lives, especially when Braille or accessible signage are not readily available.
+
+LinkBridge was developed to reduce the friction associated with communication, preserve relevant information, and enable users to become active participants in school, work, and family life.
+
 **Platform support (important):** This project currently targets mobile devices only — Android and iOS. Key reader and TTS features rely on native plugins and are not supported on web builds.
 
-At a high level, the app does three things well today:
+At a high level, the app does three things well:
 1. Handles authentication with Firebase (email + password).
 2. Runs live multi-speaker audio captioning through a WebSocket backend.
 3. Provides assistive reading (camera OCR + text-to-speech) and educational content.
@@ -31,11 +33,8 @@ After login, the Home screen exposes 4 tabs:
 3. Learn
 4. Account
 
-Important note: the old camera sign translator screen is no longer shown in the app navigation.
+## Working Features
 
-## What Works Right Now
-
-Working features:
 1. Sign up and login with Firebase Authentication.
 2. Sign out from the Account tab.
 3. Group captioning session start/stop with microphone audio streaming.
@@ -44,12 +43,6 @@ Working features:
 6. Optional named-speaker identification flow before captioning.
 7. Reader tab camera scan with on-device OCR and spoken playback.
 8. Learn tab educational content and external links.
-
-Known limitations and in-progress behavior:
-1. Share action in caption detail shows a "coming soon" message.
-2. Several debug prints are still present in streaming flows.
-3. The translator screen code exists in the repository but is intentionally not reachable from Home.
-4. Reader mode currently reads text aloud in-session but does not persist OCR scans to history.
 
 ## Tech Stack
 
@@ -278,7 +271,6 @@ lib/
         conversation_service.dart
         caption_review_service.dart
         speaker_label_mapper.dart
-        asl_stream_service.dart
 ```
 
 ## Troubleshooting
