@@ -1,0 +1,45 @@
+# Build files
+build/
+.gradle/
+*.apk
+*.ap_
+*.dex
+*.class
+
+# Local configuration
+local.properties
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Flutter
+.dart_tool/
+pubspec.lock
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
+
+# iOS/macOS
+ios/Pods/
+macos/Pods/
+ios/Flutter/Flutter.framework/
+ios/Flutter/Flutter.podspec
+
+# Android Studio
+android/local.properties
+android/.gradle/
+
+# Misc
+*.log
+*.tar.gz
+.env
+.env.local
