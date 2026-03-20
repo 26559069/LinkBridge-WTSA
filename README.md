@@ -284,13 +284,9 @@ No live captions:
 1. Confirm microphone permission was granted.
 2. Confirm backend is reachable from device network.
 3. Verify backend supports the endpoints listed above.
+4. See if the server is up and running by visiting https://aslappserver.onrender.com/health
 
 Reader problems:
 1. Test on a physical device instead of emulator when possible.
 2. Confirm camera permission.
 3. Retry after closing other apps that may hold camera resources.
-
-## Development Notes
-
-1. `translator_screen.dart` remains in the codebase but is not currently part of the visible app flow.
-2. If you re-enable it later, update `home_screen.dart` and this README together.
