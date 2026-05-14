@@ -4,19 +4,18 @@ LinkBridge is a Flutter accessibility app focused on real-time communication sup
 
 ## Vision and Motivation
 
-LinkBridge was created to provide individuals experiencing hearing or vision-related barriers to communication with accessible, easy-to-use methods of navigating everyday life. The main objective is to help users maintain their independence, receive needed information, and participate in all conversations and environments based upon the assumption that everyone can hear and see clearly.
+LinkBridge is an all-in-one accessibility toolkit designed to help individuals experiencing hearing or vision-related barriers to communication with accessible, easy-to-use methods of navigating everyday life. The main objective is to help users maintain their independence, receive needed information, and participate in all conversations and environments based upon the assumption that everyone can hear and see clearly. LinkBridge has been developed to combine several accessibility workflows in one location, which eliminates the need for users to switch between applications during typical daily activities. 
 
-LinkBridge has been developed to combine several accessibility workflows in one location, thus eliminating the need for users to switch between applications during typical daily activities. Specifically, the application will include:
+## Features: 
+**Smart Assistive Reader:** We built a camera-based OCR (Optical Character Recognition) system to help visually impaired users "read" signs, menus, and documents. To solve the problem of blurry or angled scans, the app uses real-time gyroscope and tilt data. It guides the user to level their phone perfectly before taking a scan, ensuring the text-to-speech output is accurate every time. This will allow users to achieve greater independence during their daily lives, especially when Braille or accessible signage are not readily available.
 
-1. A camera-based text recognition feature which includes a speech output option for viewing and listening to signs, menus, and other printed materials. 
-2. Live multi-speaker captioning for use in group conversations. 
-3. A conversation history for users to review previously captured speech captions.
+**Multi-Speaker Live Captioning:** Group conversations move fast, and for those using hearing aids or cochlear implants, it’s often impossible to tell who is speaking. LinkBridge captures live audio, labels individual speakers, and provides a timestamped transcript so users never lose the thread of a conversation.
 
+**Conversation History:** All captions are saved locally, allowing users to go back and review important details from a lecture or a family meeting.
 Group captioning was specifically designed to meet a very common problem experienced by many individuals using hearing aid or cochlear implant technology. That problem is identifying who is talking in the midst of a fast-paced conversation in a family or social setting. LinkBridge solves this issue by allowing users to identify and label each speaker, and then present readable, timestamped captions in real-time.
 
-For users experiencing visual impairments, the Reader mode provides an on-demand capability to convert visible text into speech. This will allow users to achieve greater independence during their daily lives, especially when Braille or accessible signage are not readily available.
 
-LinkBridge was developed to reduce the friction associated with communication, preserve relevant information, and enable users to become active participants in school, work, and family life.
+
 
 **Platform support (important):** This project currently targets mobile devices only — Android and iOS. Key reader and TTS features rely on native plugins and are not supported on web builds.
 
