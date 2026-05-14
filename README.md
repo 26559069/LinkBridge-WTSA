@@ -93,7 +93,7 @@ Primary files:
 
 How it works:
 1. A conversation ID is created via `ConversationService` (`/conversations`) or generated locally if fallback is allowed.
-2. The app connects to `wss://aslappserver.onrender.com/speech/ws`.
+2. The app connects to `linkbridgetsa.org`.
 3. Microphone PCM16 chunks are streamed as base64 `audio_chunk` events.
 4. Incoming `final_transcript` events are appended to in-memory captions.
 5. On session end, the app sends an `end` event, stops recording, closes the socket, and calls `/speech/finalize`.
@@ -130,10 +130,10 @@ Behavior:
 ## Backend Contract Used by the App
 
 Configured host:
-1. `https://aslappserver.onrender.com`
+1. `linkbridgetsa.org`
 
 Endpoints currently referenced in Flutter code:
-1. `wss://aslappserver.onrender.com/speech/ws`
+1. `linkbridgetsa.org/speech/ws`
 2. `POST /conversations`
 3. `GET /conversations`
 4. `GET /conversations/{id}`
@@ -150,8 +150,8 @@ Why this exists:
 3. The backend acts as a protocol middle layer: app WebSocket in, diarization/transcription pipeline out.
 
 Server deployment and source:
-1. Deployment: `https://aslappserver.onrender.com`
-2. Health check: `https://aslappserver.onrender.com/health`
+1. Deployment: `linkbridgetsa.org`
+2. Health check: `linkbridgetsa.org/health`
 3. Server repository: `https://github.com/MINTALLOYY/ASLAppServer`
 
 Cold-start behavior (Render):
@@ -283,7 +283,7 @@ No live captions:
 1. Confirm microphone permission was granted.
 2. Confirm backend is reachable from device network.
 3. Verify backend supports the endpoints listed above.
-4. See if the server is up and running by visiting https://aslappserver.onrender.com/health
+4. See if the server is up and running by visiting linkbridgetsa.org/health
 
 Reader problems:
 1. Test on a physical device instead of emulator when possible.
