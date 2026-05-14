@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="asl_app API docs, for the Dart programming language.">
+  <title>asl_app - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">asl_app package</li>
+  </ol>
+  <div class="self-name">asl_app</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="linkbridge">LinkBridge</h1>
+<p>LinkBridge is a Flutter accessibility app focused on real-time communication support.</p>
+<h2 id="vision-and-motivation">Vision and Motivation</h2>
+<p>LinkBridge is designed to support people who experience hearing or vision-related communication barriers in everyday life. The core goal is simple: help users stay independent, informed, and included in conversations and environments that often assume everyone can hear and see clearly.</p>
+<p>The app combines multiple accessibility workflows in one place so users do not have to switch tools during daily tasks:</p>
+<ol>
+<li>Camera-based text recognition with spoken playback for reading signs, menus, and printed information.</li>
+<li>Live multi-speaker captioning for group conversations.</li>
+<li>Conversation history for reviewing previously captured speech captions.</li>
+</ol>
+<p>The group captioning experience was shaped by a real-world need: tracking who is speaking in fast family or social conversations can be difficult even with hearing support devices. LinkBridge addresses that by labeling speakers and presenting readable, timestamped captions in real time.</p>
+<p>For users with visual impairments, the Reader mode converts visible text into speech on demand. This supports day-to-day independence in environments where Braille or accessible signage may not be available.</p>
+<p>In short, LinkBridge is built to reduce communication friction, preserve important information, and make it easier for people to remain active participants in school, work, and family life.
+<strong>Platform support (important):</strong> This project currently targets mobile devices only — Android and iOS. Key reader and TTS features rely on native plugins and are not supported on web builds.</p>
+<p>At a high level, the app does three things well today:</p>
+<ol>
+<li>Handles authentication with Firebase (email + password).</li>
+<li>Runs live multi-speaker audio captioning through a WebSocket backend.</li>
+<li>Provides assistive reading (camera OCR + text-to-speech) and educational content.</li>
+</ol>
+<h2 id="current-product-scope-what-users-see">Current Product Scope (What Users See)</h2>
+<p>After login, the Home screen exposes 4 tabs:</p>
+<ol>
+<li>Audio</li>
+<li>Reader</li>
+<li>Learn</li>
+<li>Account</li>
+</ol>
+<p>Important note: the old camera sign translator screen is no longer shown in the app navigation.</p>
+<h2 id="what-works-right-now">What Works Right Now</h2>
+<p>Working features:</p>
+<ol>
+<li>Sign up and login with Firebase Authentication.</li>
+<li>Sign out from the Account tab.</li>
+<li>Group captioning session start/stop with microphone audio streaming.</li>
+<li>Session finalization and conversation persistence through backend APIs.</li>
+<li>Caption history list and conversation detail view.</li>
+<li>Optional named-speaker identification flow before captioning.</li>
+<li>Reader tab camera scan with on-device OCR and spoken playback.</li>
+<li>Learn tab educational content and external links.</li>
+</ol>
+<p>Known limitations and in-progress behavior:</p>
+<ol>
+<li>Share action in caption detail shows a "coming soon" message.</li>
+<li>Several debug prints are still present in streaming flows.</li>
+<li>The translator screen code exists in the repository but is intentionally not reachable from Home.</li>
+<li>Reader mode currently reads text aloud in-session but does not persist OCR scans to history.</li>
+</ol>
+<h2 id="tech-stack">Tech Stack</h2>
+<p>Core:</p>
+<ol>
+<li>Flutter (Dart SDK ^3.10.1)</li>
+<li>Firebase Core + Firebase Auth</li>
+</ol>
+<p>Device and media:</p>
+<ol>
+<li>camera</li>
+<li>google_mlkit_text_recognition</li>
+<li>flutter_tts</li>
+<li>record</li>
+<li>permission_handler</li>
+</ol>
+<p>Networking:</p>
+<ol>
+<li>web_socket_channel</li>
+<li>http</li>
+</ol>
+<p>Other UI/runtime:</p>
+<ol>
+<li>url_launcher</li>
+<li>confetti</li>
+</ol>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<h3 id="app-startup-and-routing">App startup and routing</h3>
+<p><code>lib/main.dart</code> initializes Firebase, then launches <code>MaterialApp</code> with named routes:</p>
+<ol>
+<li><code>/login</code></li>
+<li><code>/register</code></li>
+<li><code>/home</code></li>
+</ol>
+<h3 id="home-shell">Home shell</h3>
+<p><code>lib/screens/home_screen.dart</code> uses an <code>IndexedStack</code> to preserve tab state while switching between:</p>
+<ol>
+<li><code>GroupCaptioningScreen</code> (Audio)</li>
+<li><code>TextReaderPage</code> (Reader)</li>
+<li><code>EducationScreen</code> (Learn)</li>
+<li>Account summary/sign-out panel</li>
+</ol>
+<h3 id="live-captioning-flow">Live captioning flow</h3>
+<p>Primary files:</p>
+<ol>
+<li><code>lib/screens/group_captioning_screen.dart</code></li>
+<li><code>lib/screens/speaker_setup_screen.dart</code></li>
+<li><code>lib/screens/speaker_identification_screen.dart</code></li>
+<li><code>lib/services/conversation_service.dart</code></li>
+<li><code>lib/services/caption_review_service.dart</code></li>
+<li><code>lib/services/speaker_label_mapper.dart</code></li>
+</ol>
+<p>How it works:</p>
+<ol>
+<li>A conversation ID is created via <code>ConversationService</code> (<code>/conversations</code>) or generated locally if fallback is allowed.</li>
+<li>The app connects through <code>AppConfig.wsUri('/speech/ws')</code>.</li>
+<li>Microphone PCM16 chunks are streamed as base64 <code>audio_chunk</code> events.</li>
+<li>Incoming <code>final_transcript</code> events are appended to in-memory captions.</li>
+<li>On session end, the app sends an <code>end</code> event, stops recording, closes the socket, and calls <code>/speech/finalize</code>.</li>
+<li>History screens fetch from <code>/conversations</code> and <code>/conversations/{id}</code>.</li>
+</ol>
+<p>Named-speaker mode:</p>
+<ol>
+<li><code>SpeakerSetupScreen</code> collects 2-6 names.</li>
+<li>App opens speech socket in <code>mode=identifying</code>.</li>
+<li><code>SpeakerIdentificationScreen</code> listens for <code>speaker_detected</code> and maps backend labels to user names.</li>
+<li>Speaker registry is posted to <code>/speech/register_speakers</code>.</li>
+<li>Flow transitions into normal captioning mode with pre-connected socket.</li>
+</ol>
+<h3 id="reader-flow">Reader flow</h3>
+<p>Primary file:</p>
+<ol>
+<li><code>lib/screens/text_reader_page.dart</code></li>
+</ol>
+<p>How it works:</p>
+<ol>
+<li>Requests camera permission.</li>
+<li>Captures a still image from camera preview.</li>
+<li>Runs OCR using Google ML Kit text recognizer.</li>
+<li>Speaks recognized text using Flutter TTS.</li>
+</ol>
+<h3 id="learn-and-account">Learn and account</h3>
+<p>Primary files:</p>
+<ol>
+<li><code>lib/screens/education_screen.dart</code></li>
+<li><code>lib/screens/home_screen.dart</code></li>
+</ol>
+<p>Behavior:</p>
+<ol>
+<li>Learn tab presents educational content and opens external resources.</li>
+<li>Account tab shows current user email and allows sign out.</li>
+</ol>
+<h2 id="backend-contract-used-by-the-app">Backend Contract Used by the App</h2>
+<p>Configured host:</p>
+<ol>
+<li><code>AppConfig.baseUrl</code></li>
+</ol>
+<p>Endpoints currently referenced in Flutter code:</p>
+<ol>
+<li><code>AppConfig.wsUri('/speech/ws')</code></li>
+<li><code>POST /conversations</code></li>
+<li><code>GET /conversations</code></li>
+<li><code>GET /conversations/{id}</code></li>
+<li><code>POST /speech/finalize</code></li>
+<li><code>POST /speech/register_speakers</code></li>
+</ol>
+<h2 id="backend-bridge-and-wake-up">Backend Bridge and Wake-Up</h2>
+<p>Group captioning uses a backend bridge by design.</p>
+<p>Why this exists:</p>
+<ol>
+<li>Speaker diarization/transcription capabilities were implemented in the server stack using gRPC-oriented tooling.</li>
+<li>The Flutter app communicates over WebSocket for live audio streaming.</li>
+<li>The backend acts as a protocol middle layer: app WebSocket in, diarization/transcription pipeline out.</li>
+</ol>
+<p>Server deployment and source:</p>
+<ol>
+<li>Deployment host: <code>AppConfig.baseUrl</code></li>
+<li>Health check: <code>AppConfig.httpUri('/health')</code></li>
+<li>Server repository: <code>https://github.com/MINTALLOYY/ASLAppServer</code></li>
+</ol>
+<p>Cold-start behavior (Render):</p>
+<ol>
+<li>The backend may sleep when idle.</li>
+<li>Before demoing or testing group captioning, call the health endpoint once.</li>
+<li>Start captioning after the health check responds successfully.</li>
+</ol>
+<h2 id="setup">Setup</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ol>
+<li>Flutter SDK compatible with Dart <code>^3.10.1</code></li>
+<li>Android Studio (Android builds)</li>
+<li>Xcode (iOS builds on macOS)</li>
+<li>Firebase project with Email/Password auth enabled</li>
+<li>Physical device recommended for camera and microphone testing</li>
+</ol>
+<p>Verify local tooling:</p>
+<pre class="language-bash"><code class="language-bash">flutter doctor
+</code></pre>
+<h3 id="install-dependencies">Install dependencies</h3>
+<pre class="language-bash"><code class="language-bash">flutter pub get
+</code></pre>
+<h3 id="firebase-configuration">Firebase configuration</h3>
+<p>The app expects <code>lib/firebase_options.dart</code> and platform Firebase config files.</p>
+<p>Recommended setup using FlutterFire CLI:</p>
+<pre class="language-bash"><code class="language-bash">dart pub global activate flutterfire_cli
+flutterfire configure
+</code></pre>
+<h2 id="documentation">Documentation</h2>
+<p>Developer-facing documentation lives under the <code>docs/</code> folder. Key files:</p>
+<ul>
+<li><code>docs/api_contracts.md</code> — WebSocket/HTTP payload shapes and examples.</li>
+<li><code>docs/setup.md</code> — quick integration &amp; run guide.</li>
+<li><code>docs/samples/</code> — JSON example payloads for testing.</li>
+</ul>
+<p>You can generate HTML API docs from DartDoc comments using:</p>
+<pre class="language-bash"><code class="language-bash">dart doc
+</code></pre>
+<p>In Firebase Console, enable Email/Password under Authentication.</p>
+<h2 id="running-the-app">Running the App</h2>
+<p>Android:</p>
+<pre class="language-bash"><code class="language-bash">flutter run
+</code></pre>
+<p>Choose a specific device:</p>
+<pre class="language-bash"><code class="language-bash">flutter devices
+flutter run -d &lt;device_id&gt;
+</code></pre>
+<p>Emulator (Android Studio AVD):</p>
+<ul>
+<li>Use an x86_64 AVD with a <strong>Google Play</strong> system image so Play services and a TTS engine are available.</li>
+<li>In AVD Manager → Edit (pencil) → Advanced Settings, set <strong>Back Camera</strong> to <code>webcam0</code> (or use <code>VirtualScene</code>), and ensure the virtual microphone is enabled.</li>
+<li>Start the emulator with the back camera mapped to your webcam (optional):</li>
+</ul>
+<pre class="language-bash"><code class="language-bash">emulator -avd &lt;AVD_NAME&gt; -camera-back webcam0
+</code></pre>
+<ul>
+<li>When running the app, grant runtime permission prompts for Camera and Microphone.</li>
+<li>Limitations: camera quality and model downloads may be flaky on some images; the iOS Simulator does not provide a usable camera feed — use a physical device for final verification.</li>
+</ul>
+<p>iOS (macOS only):</p>
+<pre class="language-bash"><code class="language-bash">cd ios
+pod install
+cd ..
+flutter run
+</code></pre>
+<p>Web (limited mic/camera behavior):</p>
+<pre class="language-bash"><code class="language-bash">flutter run -d chrome
+</code></pre>
+<h2 id="permissions">Permissions</h2>
+<p>Runtime permissions used:</p>
+<ol>
+<li>Microphone (Audio tab and speaker identification)</li>
+<li>Camera (Reader tab)</li>
+</ol>
+<p>If a feature fails unexpectedly, verify OS permissions first.</p>
+<h2 id="repository-layout">Repository Layout</h2>
+<pre class="language-text"><code class="language-text">lib/
+    main.dart
+    firebase_options.dart
+    models/
+        chat_message.dart
+        speaker_profile.dart
+    screens/
+        login_screen.dart
+        register_screen.dart
+        home_screen.dart
+        group_captioning_screen.dart
+        speaker_setup_screen.dart
+        speaker_identification_screen.dart
+        caption_review_screen.dart
+        text_reader_page.dart
+        education_screen.dart
+        translator_screen.dart
+    services/
+        conversation_service.dart
+        caption_review_service.dart
+        speaker_label_mapper.dart
+        asl_stream_service.dart
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Authentication issues:</p>
+<ol>
+<li>Re-run <code>flutterfire configure</code>.</li>
+<li>Confirm <code>firebase_options.dart</code> matches your project.</li>
+<li>Ensure Email/Password sign-in is enabled.</li>
+</ol>
+<p>No live captions:</p>
+<ol>
+<li>Confirm microphone permission was granted.</li>
+<li>Confirm backend is reachable from device network.</li>
+<li>Verify backend supports the endpoints listed above.</li>
+</ol>
+<p>Reader problems:</p>
+<ol>
+<li>Test on a physical device instead of emulator when possible.</li>
+<li>Confirm camera permission.</li>
+<li>Retry after closing other apps that may hold camera resources.</li>
+</ol>
+<h2 id="development-notes">Development Notes</h2>
+<ol>
+<li><code>translator_screen.dart</code> remains in the codebase but is not currently part of the visible app flow.</li>
+<li>If you re-enable it later, update <code>home_screen.dart</code> and this README together.</li>
+</ol>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="app_colors">
+  <span class="name"><a href="constants_app_colors/">constants\app_colors</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="app_theme">
+  <span class="name"><a href="constants_app_theme/">constants\app_theme</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="education_content">
+  <span class="name"><a href="constants_education_content/">constants\education_content</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="captioning_controller">
+  <span class="name"><a href="controllers_captioning_controller/">controllers\captioning_controller</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="asl_translator_screen">
+  <span class="name"><a href="features_asl_asl_translator_screen/">features\asl\asl_translator_screen</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="login_screen">
+  <span class="name"><a href="features_auth_login_screen/">features\auth\login_screen</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="register_screen">
+  <span class="name"><a href="features_auth_register_screen/">features\auth\register_screen</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="caption_review_screen">
+  <span class="name"><a href="features_captioning_caption_review_screen/">features\captioning\caption_review_screen</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="group_captioning_screen">
+  <span class="name"><a href="features_captioning_group_captioning_screen/">features\captioning\group_captioning_screen</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="speaker_identification_screen">
+  <span class="name"><a href="features_captioning_speaker_identification_screen/">features\captioning\speaker_identification_screen</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="speaker_setup_screen">
+  <span class="name"><a href="features_captioning_speaker_setup_screen/">features\captioning\speaker_setup_screen</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="education_screen">
+  <span class="name"><a href="features_education_education_screen/">features\education\education_screen</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="home_screen">
+  <span class="name"><a href="features_home_home_screen/">features\home\home_screen</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="text_reader_page">
+  <span class="name"><a href="features_reader_text_reader_page/">features\reader\text_reader_page</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="firebase_options">
+  <span class="name"><a href="firebase_options/">firebase_options</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="main">
+  <span class="name"><a href="main/">main</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="caption">
+  <span class="name"><a href="models_caption/">models\caption</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="chat_message">
+  <span class="name"><a href="models_chat_message/">models\chat_message</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="speaker_profile">
+  <span class="name"><a href="models_speaker_profile/">models\speaker_profile</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="captioning_provider">
+  <span class="name"><a href="providers_captioning_provider/">providers\captioning_provider</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="asl_service">
+  <span class="name"><a href="services_asl_service/">services\asl_service</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="auth_service">
+  <span class="name"><a href="services_auth_service/">services\auth_service</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="caption_review_service">
+  <span class="name"><a href="services_caption_review_service/">services\caption_review_service</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="conversation_service">
+  <span class="name"><a href="services_conversation_service/">services\conversation_service</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="speaker_label_mapper">
+  <span class="name"><a href="services_speaker_label_mapper/">services\speaker_label_mapper</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="animation_utils">
+  <span class="name"><a href="utils_animation_utils/">utils\animation_utils</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="app_config">
+  <span class="name"><a href="utils_app_config/">utils\app_config</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="asl_result_card">
+  <span class="name"><a href="widgets_asl_result_card/">widgets\asl_result_card</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="caption_tile">
+  <span class="name"><a href="widgets_caption_tile/">widgets\caption_tile</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="custom_button">
+  <span class="name"><a href="widgets_custom_button/">widgets\custom_button</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="custom_textfield">
+  <span class="name"><a href="widgets_custom_textfield/">widgets\custom_textfield</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="education_widgets">
+  <span class="name"><a href="widgets_education_widgets/">widgets\education_widgets</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">asl_app package</li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">asl_app</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="constants_app_colors/">constants\app_colors</a></li>
+      <li><a href="constants_app_theme/">constants\app_theme</a></li>
+      <li><a href="constants_education_content/">constants\education_content</a></li>
+      <li><a href="controllers_captioning_controller/">controllers\captioning_controller</a></li>
+      <li><a href="features_asl_asl_translator_screen/">features\asl\asl_translator_screen</a></li>
+      <li><a href="features_auth_login_screen/">features\auth\login_screen</a></li>
+      <li><a href="features_auth_register_screen/">features\auth\register_screen</a></li>
+      <li><a href="features_captioning_caption_review_screen/">features\captioning\caption_review_screen</a></li>
+      <li><a href="features_captioning_group_captioning_screen/">features\captioning\group_captioning_screen</a></li>
+      <li><a href="features_captioning_speaker_identification_screen/">features\captioning\speaker_identification_screen</a></li>
+      <li><a href="features_captioning_speaker_setup_screen/">features\captioning\speaker_setup_screen</a></li>
+      <li><a href="features_education_education_screen/">features\education\education_screen</a></li>
+      <li><a href="features_home_home_screen/">features\home\home_screen</a></li>
+      <li><a href="features_reader_text_reader_page/">features\reader\text_reader_page</a></li>
+      <li><a href="firebase_options/">firebase_options</a></li>
+      <li><a href="main/">main</a></li>
+      <li><a href="models_caption/">models\caption</a></li>
+      <li><a href="models_chat_message/">models\chat_message</a></li>
+      <li><a href="models_speaker_profile/">models\speaker_profile</a></li>
+      <li><a href="providers_captioning_provider/">providers\captioning_provider</a></li>
+      <li><a href="services_asl_service/">services\asl_service</a></li>
+      <li><a href="services_auth_service/">services\auth_service</a></li>
+      <li><a href="services_caption_review_service/">services\caption_review_service</a></li>
+      <li><a href="services_conversation_service/">services\conversation_service</a></li>
+      <li><a href="services_speaker_label_mapper/">services\speaker_label_mapper</a></li>
+      <li><a href="utils_animation_utils/">utils\animation_utils</a></li>
+      <li><a href="utils_app_config/">utils\app_config</a></li>
+      <li><a href="widgets_asl_result_card/">widgets\asl_result_card</a></li>
+      <li><a href="widgets_caption_tile/">widgets\caption_tile</a></li>
+      <li><a href="widgets_custom_button/">widgets\custom_button</a></li>
+      <li><a href="widgets_custom_textfield/">widgets\custom_textfield</a></li>
+      <li><a href="widgets_education_widgets/">widgets\education_widgets</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    asl_app
+      1.0.0+1
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
