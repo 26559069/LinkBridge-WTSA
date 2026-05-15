@@ -1,7 +1,6 @@
 # Build files
 build/
 .gradle/
-*.apk
 *.ap_
 *.dex
 *.class
