@@ -306,6 +306,8 @@ Ensure Email/Password sign-in is enabled in your Firebase console.
 
 ## Running the App
 
+### __*The server for backend features is currently down due to a power outage. We apologize for the inconvenience.*__
+
 Choose a specific device (ensure a physical device is selected for ideal performance):
 ```bash
 flutter devices
